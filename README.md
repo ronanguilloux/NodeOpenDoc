@@ -1,16 +1,27 @@
 
 
-Presentation
-------------
+Summary
+-------
 NodeOpenDoc is digital asset management, document-oriented, nodejs-based API & Web app.
+
+
+Features
+--------
+* CRUD on docs, + archive, unarchive & purge (hard delete)
+* managing, versions & languages
+* managing tags (the  google mail label way, exactly)
+* policies on files (on tags ?), per user (per usergroup ?)
+* (search) api
+* download
+* image thumbnailing
 
 
 Installation
 ------------    
 
-    mkdir NodeOpenDoc
-    cd NodeOpenDoc
-    git clone git://github.com/ronanguilloux/NodeOpenDoc.git
+    ~/: git clone git://github.com/ronanguilloux/NodeOpenDoc.git
+    ~/: cd NodeOpenDoc
+    ~/: node api.js
 
 
 Dependencies
