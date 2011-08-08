@@ -30,6 +30,8 @@ Dependencies
 * node-js
 * express
 * mongoose
+* jquery
+* qunit
 
 
 License Information
