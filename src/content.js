@@ -7,104 +7,69 @@ var Content = function(args, callback) {
     }
     
     this.context = args['context'] || new Context();                            // Context obj
-    this.type = args['type'] || 'generic content';                              // string
-    this._id = args['_id'] || undefined;                                        // number    
-    this.parent_id = args['parent_id'] || undefined;                            // string
+
+    // type : unique doc, or an archive to be built on the fly
+    // if is an archive, resource is an array of resources
+    this.type = args['type'] || undefined;                                      // string
     
-    // Used when a local content match a foreign content in another IS
-    this.remote_id = args['remote_id'] || undefined;                            // number
+    this._id = args['_id'] || undefined;                                        // string    
     
+    // slug déduit du titre + un truc unique
+    this.slug = args['_slug'] || undefined;                                   // string
     this.title = args['title'] || undefined;                                    // string
-	this.shortTitle = args['shortTitle'] || undefined;                          // string
+    this.description = args['title'] || undefined;                              // string
 
+    this.resource = args['resource'];                                           // string or array
+    
     // tags
-    this.tags = args['tags'] || undefined;                                      // array
+    this.tags = args['tags'] || undefined;                                      // array    
+    this.sets = args['sets'] || undefined;                                      // array
 
-    // state : new, draft, published, archived, deleted, purged
+    // state : 0  = exists and is standard
+    // state : 1  = deleted
     this.state = args['state'] || undefined;                                    // number
 
+    // NOT USED FOR NOW :
     // version : 0
-    this.version = args['version'] || 0;                                        // number
-
-    // lang : fra, eng, etc.., see iso639-6 : http://goo.gl/4WFqh
-    this.initial_language = args['initial_language'] || undefined;              // string
-    this.language = args['language'] || undefined;                              // string
-
-    // available content set stages
-    this.stage = args['stage'] || undefined;                                    // array
-    this.section = args['section'] || undefined;                                // array
-
-    // authors array. 0 = anonymous
-    this.authors = args['authors'] || undefined;                                // array
-    this.related_contents = args['related_contents'] || undefined;              // array
-    
-    this.children_sort = args['children_sort'] || undefined;                    // array
+    this.version = args['version'] || 0;                                        // number    
 
     // unix times
     this.created = args['created'] || undefined;                                // number
-    this.last_modified = args['last_modified'] || undefined;                    // number
-    this.published = args['published'] || undefined;                            // number
+    this.last_modified = args['last_modified'] || undefined;                    // number    
 
-    // SEO
-    this.metadata = args['metadata'] || undefined;                              // object
-    this.microformats = args['microformats'] || undefined;                      // object
+    // user van edit key/value data (json object)
+    this.user_metadata = args['metadata'] || undefined;                         // object    
     
-    // the content semantic structure : paragraphs, medias, etc.    
-    this.data_map = {};                                                         // object
+    // illustration
+    this.thumbnail = args['thumbnail'] || undefined;                                 // string
     
 	this.callback = callback || undefined;
 
 };
 
+var defaultState = 'standard';
+var defaultType = 'document'
+
 Content.prototype = {
     
     // the global object's loading process, 
     // a set of method calls
-    load: function(callback) {        
+    load: function(args) {        
         if (this.args instanceof Object) {        
-            this.init();
-            this.setup();
-            this.fill();
-            this.teardown();
+            this.init(args);            
             this.context.log('Content loaded');
-            this.context.log(this);
         }        
     },
     
     init: function(args) {
 		try {            
             this.context.log('Content initialized');
-            this.state = 'new';
+            this.state = defaultState;
+            this.type = defaultType;
 		} catch(e) {
             fail("Content init function failed", e);
 		}
 	},
-        
-    setup: function(args) {
-        try {
-            this.context.log('Content setted up');
-		} catch(e) {
-			fail("Content setup function failed", e);
-		}
-    },
-    
-    // fill object from model engine, using args
-    fill: function(args) {
-        try {
-            this.context.log('Content filled up');
-		} catch(e) {
-			fail("Content fill function failed", e);
-		}
-    },
-    
-    // prepare to render the object
-    teardown: function(args) {
-        try {
-            this.context.log('Content teared down');
-        } catch(e) {
-			fail("Content teardown function failed", e);
-		}
-    },
     
      // Arrayize
     toArray: function(args) {
@@ -119,36 +84,62 @@ Content.prototype = {
     toString: function(args) {
         try {
             this.context.log('Content stringified');
-            return this.shortTitle || undefined;        
+            return this.title || undefined;        
         } catch(e) {
         	fail("Content toString() function failed", e);
 		}
     },
+       
+    /* 
+    
         
-    create: function(args) {
+        
+        Store() log toutes les actions en écriture : 
+        untel a uploadé tel doc tel jour
+        
+        Une exception est gérée si plus d'1 resource 
+        équivalente existe déjà dans un contexte particulier
+        (ex: dans le même tag)
+        
+        args : {
+            tags : [],
+            title : '',
+            source : '/tmp/cv.pdf',
+            update: true/false,
+            update_tags: ['aTag'] or undefined, or '' if we do not want to tag it
+            slug : true/false : force a slug recalculating 
+        }
+     */
+    store: function(args) {
         try {
+            
+            // if update, retrieve by ressource name
+            // source can be an URL, to be cUrled.
+            
             this.context.log('Content created');            
         } catch(e) {
             fail("Content teardown function failed", e);
 		}
     },
     
-     fetch: function(args) {
+    fetch: function(args) {
         try {
             this.context.log('Content fetched');            
         } catch(e) {
             fail("Content fetch() function failed", e);
     	}
-    },
+    },  
     
-    store: function(args) {
+    // alias, calls fetch with a tag list
+    fetchBySlug: function(args) {
         try {
-            this.context.log('Content stored');            
+            this.context.log('Content fetchByTags');            
         } catch(e) {
-            fail("Content store() function failed", e);
+            fail("Content fetchByTags() function failed", e);
         }
     },
     
+    // flagged as as deleted
     delete: function(args) {
         try {
             this.context.log('Content (mark as) deleted');            
@@ -156,16 +147,8 @@ Content.prototype = {
             fail("Content delete() function failed", e);
         }
     },
-    
-    archive: function(args) {
-        try {
-            this.context.log('Content (mark as) archived');            
-        } catch(e) {
-            fail("Content archive() function failed", e);
-        }
-    },
-    
-    // Hard delete, concerns content & related medias, versions, translations, etc.
+       
+    // Hard delete, concerns the model & its related resources
     purge: function(args) {
         try {
             this.context.log('Content purged');            
@@ -183,60 +166,23 @@ Content.prototype = {
         }
     },
     
-    // reset short title, long title, etc.
     rename: function(args) {
         try {
             this.context.log('Content renamed');            
         } catch(e) {
             fail("Content rename() function failed", e);
         }
-    },
-            
-    fetchByLanguage: function(args) {
+    },    
+    
+    // alias, calls fetchList with a tag list
+    fetchByTags: function(args) {
         try {
-            this.context.log('Content fetchByLanguaged');            
+            this.context.log('Content fetchByTags');            
         } catch(e) {
-            fail("Content fetchByLanguage() function failed", e);
+            fail("Content fetchByTags() function failed", e);
         }
     },
-    
-    // in current stage, language & state
-    fetchByVersion: function(args) {
-        try {
-            this.context.log('Content fetchByVersioned');            
-        } catch(e) {
-            fail("Content fetchByVersion() function failed", e);
-        }
-    },
-    
-    // in current stage, version & state
-    fetchTranslations: function(args) {
-        try {
-            this.context.log('Content fetchTranslation()');            
-        } catch(e) {
-            fail("Content fetchTranslations() function failed", e);
-        }
-    },
-    
-    // in current stage, version & state
-    fetchAvailableLanguages: function(args) {
-        try {
-            this.context.log('Content fetchAvailableLanguages()');            
-        } catch(e) {
-            fail("Content fetchAvailableLanguages() function failed", e);
-        }
-    },
-    
-    // an alias for fetching in current version, stage, state & language
-    fetchCurrent: function(args) {
-        try {
-            this.context.log('Content fetchCurrent()');            
-        } catch(e) {
-            fail("Content fetchCurrent() function failed", e);
-        }
-    },
-    
-    // in current version, stage, state & language
+        
     fetchList: function(args) {
         try {
             this.context.log('Content fetchList()');            
@@ -244,8 +190,7 @@ Content.prototype = {
             fail("Content fetchList() function failed", e);
         }
     },
-    
-    // in current version, stage, state & language
+        
     fetchListCount: function(args) {
         try {
             this.context.log('Content fetchListCount()');            
@@ -254,69 +199,15 @@ Content.prototype = {
         }
     },
     
-    // in current version, stage, state & language
-    fetchByTag: function(args) {
+    createThumbs: function(args) {
         try {
-            this.context.log('Content fetchByTag()');            
+            this.context.log('Content createThumbs()');            
         } catch(e) {
-            fail("Content fetchByTag() function failed", e);
+            fail("Content createThumbs() function failed", e);
         }
     },
     
-    // fetch related contents in current version, stage, state & language
-    fetchRelated: function(args) {
-        try {
-            this.context.log('Content fetchRelated()');            
-        } catch(e) {
-            fail("Content fetchRelated() function failed", e);
-        }
-    }, 
-    
-    // fetch related contents in current version, stage, state & language
-    fetchReverseRelated: function(args) {
-        try {
-            this.context.log('Content fetchReverseRelated()');            
-        } catch(e) {
-            fail("Content fetchReverseRelated() function failed", e);
-        }
-    },
-    
-    // reset trailing drafts
-    cleanUpDrafts: function(args) {
-        try {
-            this.context.log('Content cleanUpDrafts()');            
-        } catch(e) {
-            fail("Content cleanUpDrafts() function failed", e);
-        }
-    },
-    
-    // fallbcak to a previous version
-    revertTo: function(args) {
-        try {
-            this.context.log('Content revertTo()');            
-        } catch(e) {
-            fail("Content revertTo() function failed", e);
-        }
-    },
-    
-    // fallbcak to a previous version
-    clone: function(args) {
-        try {
-            this.context.log('Content cloned');            
-        } catch(e) {
-            fail("Content clone() function failed", e);
-        }
-    },
-
-    // fetch current content's parents tree as an array of {id:name}
-    getPathArray: function(args) {
-        try {
-            this.context.log('Content getPathArray');            
-        } catch(e) {
-            fail("Content getPathArray() function failed", e);
-        }
-    }
-  
+   
 };
 
 module.exports = Content;

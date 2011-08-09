@@ -1,8 +1,8 @@
 console.log('main src file loaded');
 
-var a = new Content();
+var a = new Content(); // this returns false : Content() call always needs args;
 a.load();
-console.log('a is a ' + a.state + ' ' + a.type);
+console.log('a is a ' + a.state + ' ' + a.type); // will not throw anything
 
 var globalContext = new Context({});
 globalContext.load({});
