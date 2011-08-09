@@ -1,30 +1,32 @@
 // Params :
 var defaultContext = 'dev';
 
-var Context = function(args, callback) {
+var Context = function(args) {
+    
+    this.type = defaultContext;
     if (args instanceof Object) {
-        // continue...
+        this.args = args;
     } else {
         return false;
     }
-    this.type = args['type'] || defaultContext;                                 // string
+    this.type = args['type'] || this.type;                                 // string
 };
 
 Context.prototype = {
     
-    load: function(args, callback) {
-        this.init(args, callback);        
+    load: function() {
+        this.init();        
     },
     
-    log: function(message, callback) {
-        log(this, message, callback);        
+    log: function(message) {
+        log(this, message);        
     },
     
-    init: function(args, callback) {
+    init: function() {
         try {
             // ...	
 		} catch(e) {
-			fail("init function failed", e, this.callback);
+			fail("init function failed", e);
 		}
 	}
 };
