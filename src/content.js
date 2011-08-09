@@ -15,7 +15,7 @@ var Content = function(args, callback) {
     this._id = args['_id'] || undefined;                                        // string    
     
     // slug déduit du titre + un truc unique
-    this.slug = args['_slug'] || undefined;                                   // string
+    this.slug = args['_slug'] || undefined;                                     // string
     this.title = args['title'] || undefined;                                    // string
     this.description = args['title'] || undefined;                              // string
 
@@ -41,7 +41,7 @@ var Content = function(args, callback) {
     this.user_metadata = args['metadata'] || undefined;                         // object    
     
     // illustration
-    this.thumbnail = args['thumbnail'] || undefined;                                 // string
+    this.thumbnail = args['thumbnail'] || undefined;                            // string
     
 	this.callback = callback || undefined;
 
