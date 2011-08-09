@@ -2,3 +2,16 @@
 * uploads : raw / sync : sync updates, raw is a simple strip add
 * batch uploads
 * batch download : using the 'archive' type, builds an archive on-the-fly
+
+* each API client only see what it is allowed to => policy management
+* each user can subscribe to a doc or a entire tagged-based documents set
+* user can receive alerts on docs / tags he is has suscribed to.
+* user choose frequency / limitations (which crud tasks) to its subscriptions
+* user can add/remove a tag from a document he uploaded
+* tag url : doamin.com/tag1/tag11/tag111/ =  all doc having this tag
+* regexp-based doc searching using the tag path
+* tag are organized as pathes : tag1.tag11.tag111
+* "delete a tag" = delete links beetwen existing docs & this tag
+* "delete a doc found in a tag folder" = delete the doc, everywhere
+
+
