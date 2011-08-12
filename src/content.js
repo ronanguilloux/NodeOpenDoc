@@ -10,7 +10,6 @@ var Content = function(args, callback) {
 
     // type : unique doc, or an archive to be built on the fly
     // if is an archive, resource is an array of resources
-    this.type = args['type'] || undefined;                                      // string
     
     this._id = args['_id'] || undefined;                                        // string    
     
@@ -23,22 +22,17 @@ var Content = function(args, callback) {
     
     // tags
     this.tags = args['tags'] || undefined;                                      // array    
-    this.sets = args['sets'] || undefined;                                      // array
 
     // state : 0  = exists and is standard
     // state : 1  = deleted
-    this.state = args['state'] || undefined;                                    // number
-
-    // NOT USED FOR NOW :
-    // version : 0
-    this.version = args['version'] || 0;                                        // number    
+    this.status = args['state'] || undefined;                                    // number
 
     // unix times
-    this.created = args['created'] || undefined;                                // number
+    this.created_at = args['created'] || undefined;                                // number
     this.last_modified = args['last_modified'] || undefined;                    // number    
 
-    // user van edit key/value data (json object)
-    this.user_metadata = args['metadata'] || undefined;                         // object    
+    // user can edit key/value data (json object)
+    // this.user_metadata = args['metadata'] || undefined;                         // object    
     
     // illustration
     this.thumbnail = args['thumbnail'] || undefined;                            // string
