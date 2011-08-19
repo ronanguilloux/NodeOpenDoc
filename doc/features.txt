@@ -15,7 +15,7 @@
 * "delete a doc found in a tag folder" = delete the doc, everywhere
 
 * views (in a dashboard) : 
-** just uploaeded
+** just uploaded
 ** empty tags
 
 
