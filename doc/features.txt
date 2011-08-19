@@ -14,4 +14,8 @@
 * "delete a tag" = delete links beetwen existing docs & this tag
 * "delete a doc found in a tag folder" = delete the doc, everywhere
 
+* views (in a dashboard) : 
+** just uploaeded
+** empty tags
+
 
